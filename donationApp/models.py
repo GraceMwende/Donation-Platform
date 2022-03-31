@@ -63,7 +63,13 @@ class Charity(models.Model):
 class Donor(models.Model):
     donor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
 
+    def __str__(self):
+        return self.donor.user_name
+
 class Donations(models.Model):
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
     amount = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.donor.donor.user_name

@@ -12,7 +12,7 @@ class DonorSerializer(serializers.ModelSerializer):
   # groups = UsersSerializer(source='donations_set',many=True)
   class Meta:
     model = Donor
-    fields = ('__all__')
+    fields = '__all__'
     # exclude = ['is_staff','is_active','is_superuser','groups','user_permissions','last_login']
 
 
@@ -45,7 +45,7 @@ class CharitySerializer(serializers.ModelSerializer):
   users = UsersSerializer()
   class Meta:
     model = Charity
-    fields = ('__all__')
+    fields = '__all__'
 
   def create(self, validated_data):
         users_data = validated_data.pop('users')
@@ -111,7 +111,7 @@ class DonationsSerializer(serializers.ModelSerializer,):
   charity = CharitySerializer()
   class Meta:
     model = Donations
-    fields = ('__all__')
+    fields = '__all__'
 
   def create(self, validated_data):
       donor_data = validated_data.pop('donor')
