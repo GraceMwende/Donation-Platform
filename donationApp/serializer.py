@@ -9,6 +9,7 @@ class UsersSerializer(serializers.ModelSerializer):
 
 class DonorSerializer(serializers.ModelSerializer):
   donor = UsersSerializer()
+  # groups = UsersSerializer(source='donations_set',many=True)
   class Meta:
     model = Donor
     fields = ('__all__')
@@ -20,6 +21,24 @@ class DonorSerializer(serializers.ModelSerializer):
       donors = CustomUser.objects.create(**donor_data)
       donor =  Donor.objects.create(donor=donors,**validated_data)
       return donor
+
+
+  def update(self,instance,validated_data):
+    donor_data = validated_data.pop('donor')
+    donor = instance.donor
+
+    # instance.location = validated_data.get('location', instance.location)
+    # instance.save()
+
+    donor.user_name = donor_data.get('user_name',donor.user_name)
+
+    donor.first_name = donor_data.get('first_name',donor.first_name)
+    donor.last_name = donor_data.get('last_name',donor.last_name)
+    donor.email = donor_data.get('email',donor.email)
+    donor.save()
+
+    return instance
+
 
 
 class CharitySerializer(serializers.ModelSerializer):
@@ -87,7 +106,7 @@ class CharitySerializer(serializers.ModelSerializer):
 
 
 
-class DonationsSerializer(serializers.ModelSerializer):
+class DonationsSerializer(serializers.ModelSerializer,):
   donor = DonorSerializer()
   charity = CharitySerializer()
   class Meta:
