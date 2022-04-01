@@ -60,6 +60,12 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 class Charity(models.Model):
     users = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
     location = models.CharField(max_length=150,default='Nairobi')
+    charity_image = models.ImageField(upload_to = 'charities/' , default='default.jpg',blank=True, null=True)
+
+# class BenefactorsStories(models.Model):
+#     user_image = models.ImageField(upload_to = 'beneficiary/')
+#     description = models.TextField()
+
 class Donor(models.Model):
     donor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
 
