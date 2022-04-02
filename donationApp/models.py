@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager,AbstractBaseUser,PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from django_resized import ResizedImageField
+from PIL import Image
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -65,6 +67,17 @@ class Charity(models.Model):
     def __str__(self):
         return self.users.user_name
 
+    def save(self):
+        if not self.charity_image:
+            return            
+
+        super(BenefactorsStories, self).save()
+        image = Image.open(self.charity_image)
+        (width, height) = image.size     
+        size = ( 600, 600)
+        image = image.resize(size, Image.ANTIALIAS)
+        image.save(self.charity_image.path)
+
 class BenefactorsStories(models.Model):
     user_image = models.ImageField(upload_to = 'beneficiary/')
     title = models.CharField(max_length=20)
@@ -73,6 +86,17 @@ class BenefactorsStories(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self):
+        if not self.user_image:
+            return            
+
+        super(BenefactorsStories, self).save()
+        image = Image.open(self.user_image)
+        (width, height) = image.size     
+        size = ( 600, 600)
+        image = image.resize(size, Image.ANTIALIAS)
+        image.save(self.user_image.path)
 
 class Donor(models.Model):
     donor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
