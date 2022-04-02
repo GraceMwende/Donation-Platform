@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Charity,Donor,Donations,CustomUser
-from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
+from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer
 from rest_framework import status
 
 # Create your views here.
@@ -171,4 +171,44 @@ class CharityDescription(APIView):
   def delete(self, request, pk, format=None):
     charity = self.get_charity(pk)
     charity.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# beneficiaries
+class BenefactorsList(APIView):
+  def get(self, request, format=None):
+    all_benefactor = BenefactorsStories.objects.all()
+    serializers = BenefactorSerializer(all_benefactor,many=True)
+    return Response(serializers.data)
+  
+  def post(self, request, format=None):
+    serializers = BenefactorSerializer(data=request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_201_CREATED)
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class BenefactorDescription(APIView):
+  def get_benefactor(self, pk):
+        try:
+            return BenefactorsStories.objects.get(pk=pk)
+        except BenefactorsStories.DoesNotExist:
+            return Http404
+
+  def get(self, request, pk, format=None):
+      benefactor = self.get_benefactor(pk)
+      serializers = BenefactorSerializer(benefactor)
+      return Response(serializers.data)
+
+  def put(self, request, pk, format=None):
+    benefactor = self.get_benefactor(pk)
+    serializers = BenefactorSerializer(benefactor, request.data)
+    if serializers.is_valid():
+        serializers.save()
+        return Response(serializers.data)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  def delete(self, request, pk, format=None):
+    benefactor = self.get_benefactor(pk)
+    benefactor.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

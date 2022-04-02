@@ -62,9 +62,17 @@ class Charity(models.Model):
     location = models.CharField(max_length=150,default='Nairobi')
     charity_image = models.ImageField(upload_to = 'charities/' , default='default.jpg',blank=True, null=True)
 
-# class BenefactorsStories(models.Model):
-#     user_image = models.ImageField(upload_to = 'beneficiary/')
-#     description = models.TextField()
+    def __str__(self):
+        return self.users.user_name
+
+class BenefactorsStories(models.Model):
+    user_image = models.ImageField(upload_to = 'beneficiary/')
+    title = models.CharField(max_length=20)
+    description = models.CharField(max_length=30)
+    charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
 class Donor(models.Model):
     donor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)

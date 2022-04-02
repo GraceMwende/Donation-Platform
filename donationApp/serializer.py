@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Charity,Donor,Donations,CustomUser
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
 
 class UsersSerializer(serializers.ModelSerializer):
   id = serializers.IntegerField(required=False)
@@ -61,17 +61,17 @@ class CharitySerializer(serializers.ModelSerializer):
         # return charity
 
   def update(self,instance,validated_data):
-    users_data = validated_data.pop('users')
+    charity_data = validated_data.pop('users')
     users = instance.users
 
     instance.location = validated_data.get('location', instance.location)
     instance.save()
 
-    users.user_name = users_data.get('user_name',users.user_name)
+    users.user_name = charity_data.get('user_name',users.user_name)
 
-    users.first_name = users_data.get('first_name',users.first_name)
-    users.last_name = users_data.get('last_name',users.last_name)
-    users.email = users_data.get('email',users.email)
+    users.first_name = charity_data.get('first_name',users.first_name)
+    users.last_name = charity_data.get('last_name',users.last_name)
+    users.email = charity_data.get('email',users.email)
     users.save()
 
     return instance
@@ -125,3 +125,33 @@ class DonationsSerializer(serializers.ModelSerializer,):
           # charity = CustomUser.objects.get(pk=user.get('id'))
           # instance.users.add(charity)
         # CustomUser.objects.create(charity=charity,**users)
+
+class BenefactorSerializer(serializers.ModelSerializer):
+  charity = CharitySerializer()
+  class Meta:
+    model = BenefactorsStories()
+    fields = '__all__'
+
+  def create(self, validated_data):
+      charity_data = validated_data.pop('charity')
+      charities = Charity.objects.create(**charity_data)
+      benefactor =  Charity.objects.create(charity=charities,**validated_data)
+      return benefactor
+
+  def update(self,instance,validated_data):
+    users_data = validated_data.pop('charity')
+    charity = instance.charity
+
+    instance.user_image = validated_data.get('user_image', instance.user_image)
+    instance.title = validated_data.get('title', instance.title)
+    instance.description = validated_data.get('description', instance.description)
+    instance.save()
+
+    charity.user_name = charity_data.get('user_name',charity.user_name)
+
+    charity.first_name = charity_data.get('first_name',charity.first_name)
+    charity.last_name = charity_data.get('last_name',charity.last_name)
+    charity.email = charity_data.get('email',charity.email)
+    charity.save()
+
+    return instance

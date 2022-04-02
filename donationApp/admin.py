@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser,Charity,Donor,Donations
+from .models import CustomUser,Charity,Donor,Donations,BenefactorsStories
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
@@ -28,3 +28,4 @@ admin.site.register(CustomUser,UserAdminConfig)
 admin.site.register(Charity)
 admin.site.register(Donor)
 admin.site.register(Donations)
+admin.site.register(BenefactorsStories)
