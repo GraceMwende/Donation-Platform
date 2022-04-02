@@ -71,7 +71,7 @@ class Charity(models.Model):
         if not self.charity_image:
             return            
 
-        super(BenefactorsStories, self).save()
+        super(Charity, self).save()
         image = Image.open(self.charity_image)
         (width, height) = image.size     
         size = ( 600, 600)
