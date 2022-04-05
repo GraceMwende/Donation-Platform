@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory
 from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer
 from rest_framework import status
-from rest_framework.parsers import FileUploadParser
-from .forms import FileUploadForm
+# from rest_framework.parsers import FileUploadParser
+# from .forms import FileUploadForm
+# import json
+
 
 # Create your views here.
 def home(request):
@@ -177,52 +179,52 @@ class CharityDescription(APIView):
 
 # beneficiaries
 class BenefactorsList(APIView):
-  parser_classes = (FileUploadParser,)
+  # parser_classes = (FileUploadParser,)
   def get(self, request, format=None):
-    all_benefactor = BenefactorsStories.objects.all()
+    all_benefactor = BenefactorsStory.objects.all()
     serializers = BenefactorSerializer(all_benefactor,many=True)
     return Response(serializers.data)
   
-  # def post(self, request, format=None):
-  #   serializers = BenefactorSerializer(data=request.data)
-  #   if serializers.is_valid():
-  #     serializers.save()
-  #     return Response(serializers.data,status=status.HTTP_201_CREATED)
-  #   return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
-  def post(self, request):
-    user_image = None
-    # title = None
-    # description = None
-    # Charity = None
-    # data = None
+  def post(self, request, format=None):
+    serializers = BenefactorSerializer(data=request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_201_CREATED)
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+  # def post(self, request):
+  #   user_image = None
+  #   # title = None
+  #   # description = None
+  #   # Charity = None
+  #   # data = None
+  
+  #   file_form = FileUploadForm(request.POST,request.FILES)
+  #   if file_form.is_valid():
+  #     user_image = request.FILES['file']
+  #   else:
+  #     return Response(file_form,status=status.HTTP_406_NOT_ACCEPTABLE)
 
-    file_form = FileUploadForm(request.POST,request.FILES)
-    if file_form.is_valid():
-      user_image = request.FILES['file']
-    else:
-      return Response(ajax_response(file_form),status=status.HTTP_406_NOT_ACCEPTABLE)
-
-    try:
-      beneficiary = BenefactorsStories.objects.all()
-      beneficiary.user_image = user_image
-      # beneficiary.title = t
-      beneficiary.save()
-      data=BenefactorSerializer(beneficiary).data
-    except:
-      raise 'error'
-    # BenefactorsStories.DoesNotExist:
-    #   profile = Student.objects.get(user=user)
-    #   profile.photo = photo
-    #   profile.save()
-    #   data=StudentSerializer(profile).data
-
-    return Response(data)
+  #   try:
+  #     beneficiary = BenefactorsStory.objects.all()
+  #     beneficiary.user_image = user_image
+  #     # beneficiary.title = t
+  #     beneficiary.save()
+  #     data=BenefactorSerializer(beneficiary).data
+  #   except:
+  #     raise 'error'
+  #   # BenefactorsStory.DoesNotExist:
+  #   #   profile = Student.objects.get(user=user)
+  #   #   profile.photo = photo
+  #   #   profile.save()
+  #   #   data=StudentSerializer(profile).data
+    
+  #   return Response(data)
 
 class BenefactorDescription(APIView):
   def get_benefactor(self, pk):
         try:
-            return BenefactorsStories.objects.get(pk=pk)
-        except BenefactorsStories.DoesNotExist:
+            return BenefactorsStory.objects.get(pk=pk)
+        except BenefactorsStory.DoesNotExist:
             return Http404
 
   def get(self, request, pk, format=None):

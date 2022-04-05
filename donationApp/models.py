@@ -61,25 +61,26 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         return self.email
 
 class Charity(models.Model):
-    users = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    charity = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     location = models.CharField(max_length=150,default='Nairobi')
-    charity_image = models.ImageField(upload_to = 'charities/' , default='default.jpg',blank=True, null=True)
+    # charity_image = models.ImageField(upload_to = 'charities/' , default='default.jpg',blank=True, null=True)
+    charity_image=CloudinaryField('image',blank=True,null=True)
 
     def __str__(self):
-        return self.users.user_name
+        return self.charity.user_name
 
-    def save(self):
-        if not self.charity_image:
-            return            
+    # def save(self):
+    #     if not self.charity_image:
+    #         return            
 
-        super(Charity, self).save()
-        image = Image.open(self.charity_image)
-        (width, height) = image.size     
-        size = ( 600, 600)
-        image = image.resize(size, Image.ANTIALIAS)
-        image.save(self.charity_image.path)
+    #     super(Charity, self).save()
+    #     image = Image.open(self.charity_image)
+    #     (width, height) = image.size     
+    #     size = ( 600, 600)
+    #     image = image.resize(size, Image.ANTIALIAS)
+    #     image.save(self.charity_image.path)
 
-class BenefactorsStories(models.Model):
+class BenefactorsStory(models.Model):
     user_image = CloudinaryField('image',blank=True,null=True)
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=30)
@@ -88,16 +89,16 @@ class BenefactorsStories(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self):
-        if not self.user_image:
-            return            
+    # def save(self):
+    #     if not self.user_image:
+    #         return            
 
-        super(BenefactorsStories, self).save()
-        image = Image.open(self.user_image)
-        (width, height) = image.size     
-        size = ( 600, 600)
-        image = image.resize(size, Image.ANTIALIAS)
-        image.save(self.user_image.path)
+    #     super(BenefactorsStories, self).save()
+    #     image = Image.open(self.user_image)
+    #     (width, height) = image.size     
+    #     size = ( 600, 600)
+    #     image = image.resize(size, Image.ANTIALIAS)
+    #     image.save(self.user_image.path)
 
 class Donor(models.Model):
     donor = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
