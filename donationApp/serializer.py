@@ -1,5 +1,47 @@
 from rest_framework import serializers
 from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
+import re
+
+
+# class Base64ImageField(serializers.ImageField):
+#   def to_internal_value(self, data,altchars=b'+/'):
+#     from django.core.files.base import ContentFile
+#     import base64
+#     import six
+#     import uuid
+
+#       # Check if this is a base64 string
+#     if isinstance(data, six.string_types):
+#       if 'data:' in data and ';base64,' in data:
+#         header, data = data.split(';base64,')
+
+#       try:
+#         data = re.sub(rb'[^a-zA-Z0-9%s]+' % altchars, b'', data)  # normalize
+#         missing_padding = len(data) % 4
+#         if missing_padding:
+#           data += b'='* (4 - missing_padding)
+#         return base64.b64decode(data, altchars)
+            
+#       except TypeError:
+#         self.fail('invalid_image')
+
+#       file_name = str(uuid.uuid4())[:12] # 12 characters are more than enough.
+#           # Get the file name extension:
+#       file_extension = self.get_file_extension(file_name, decoded_file)
+
+#       complete_file_name = "%s.%s" % (file_name, file_extension, )
+
+#       data = ContentFile(decoded_file, name=complete_file_name)
+
+#     return super(Base64ImageField, self).to_internal_value(data)
+
+#   def get_file_extension(self, file_name, decoded_file):
+#     import imghdr
+
+#     extension = imghdr.what(file_name, decoded_file)
+#     extension = "jpg" if extension == "jpeg" else extension
+
+#     return extension
 
 class UsersSerializer(serializers.ModelSerializer):
   id = serializers.IntegerField(required=False)
@@ -128,6 +170,11 @@ class DonationsSerializer(serializers.ModelSerializer,):
 
 class BenefactorSerializer(serializers.ModelSerializer):
   charity = CharitySerializer()
+  # user_image = serializers.ImageField(required=False, use_url=True)
+  # user_image = Base64ImageField(
+  #       max_length=None, use_url=True,
+  #   )
+
   class Meta:
     model = BenefactorsStories()
     fields = '__all__'

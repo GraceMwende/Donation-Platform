@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django_resized import ResizedImageField
 from PIL import Image
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -79,7 +80,7 @@ class Charity(models.Model):
         image.save(self.charity_image.path)
 
 class BenefactorsStories(models.Model):
-    user_image = models.ImageField(upload_to = 'beneficiary/')
+    user_image = CloudinaryField('image',blank=True,null=True)
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=30)
     charity = models.ForeignKey(Charity, on_delete=models.CASCADE)
