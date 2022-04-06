@@ -5,8 +5,7 @@ from rest_framework.views import APIView
 from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
 from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer
 from rest_framework import status
-from rest_framework.parsers import FileUploadParser
-from .forms import FileUploadForm
+
 
 # Create your views here.
 def home(request):
