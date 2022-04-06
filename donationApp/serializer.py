@@ -110,7 +110,7 @@ class BenefactorSerializer(serializers.ModelSerializer):
       charity_data = validated_data.pop('charity')
 
       # started here
-      data = charity_data['users']
+      data = charity_data['charity']
 
       user_name = data['user_name']
       email = data['email']
@@ -123,7 +123,7 @@ class BenefactorSerializer(serializers.ModelSerializer):
       location = charity_data['location']
       charity_image = charity_data['charity_image']
 
-      charities = Charity.objects.create(users=new_user, location=location, charity_image=charity_image)
+      charities = Charity.objects.create(charity=new_user, location=location, charity_image=charity_image)
 
       benefactor =  BenefactorsStory.objects.create(charity=charities,**validated_data)
       
@@ -133,8 +133,8 @@ class BenefactorSerializer(serializers.ModelSerializer):
   def update(self,instance,validated_data):
     charity_data = validated_data.pop('charity')
     # starts here
-    data = charity_data['users']
-    users = instance.charity.users
+    data = charity_data['charity']
+    users = instance.charity.charity
     charity = instance.charity
 
     instance.charity = validated_data.get('charity', instance.charity)
