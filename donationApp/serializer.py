@@ -1,12 +1,20 @@
 from rest_framework import serializers
+
 from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
 from django.contrib.auth.hashers import make_password
 
+
 class UsersSerializer(serializers.ModelSerializer):
   id = serializers.IntegerField(required=False)
+
+  @staticmethod
+  def validate_password(password: str) -> str:
+    return make_password(password) 
+
   class Meta:
     model = CustomUser
     exclude = ['is_staff','is_active','is_superuser','groups','user_permissions','last_login']
+
 
 class DonorSerializer(serializers.ModelSerializer):
   donor = UsersSerializer()
@@ -43,31 +51,31 @@ class DonorSerializer(serializers.ModelSerializer):
 
 
 class CharitySerializer(serializers.ModelSerializer):
-  users = UsersSerializer()
+  charity = UsersSerializer()
   class Meta:
     model = Charity
     fields = '__all__'
 
   def create(self, validated_data):
-        users_data = validated_data.pop('users')
+        users_data = validated_data.pop('charity')
         user = CustomUser.objects.create(**users_data)
-        charity =  Charity.objects.create(users=user,**validated_data)
+        charity =  Charity.objects.create(charity=user,**validated_data)
         return charity
 
 
   def update(self,instance,validated_data):
-    charity_data = validated_data.pop('users')
-    users = instance.users
+    charity_data = validated_data.pop('charity')
+    charity = instance.charity
 
     instance.location = validated_data.get('location', instance.location)
     instance.save()
 
-    users.user_name = charity_data.get('user_name',users.user_name)
+    charity.user_name = charity_data.get('user_name',charity.user_name)
 
-    users.first_name = charity_data.get('first_name',users.first_name)
-    users.last_name = charity_data.get('last_name',users.last_name)
-    users.email = charity_data.get('email',users.email)
-    users.save()
+    charity.first_name = charity_data.get('first_name',charity.first_name)
+    charity.last_name = charity_data.get('last_name',charity.last_name)
+    charity.email = charity_data.get('email',charity.email)
+    charity.save()
 
     return instance
 
@@ -93,11 +101,14 @@ class BenefactorSerializer(serializers.ModelSerializer):
   charity = CharitySerializer()
 
   class Meta:
+
     model = BenefactorsStories
+
     fields = '__all__'
 
   def create(self, validated_data):
       charity_data = validated_data.pop('charity')
+
       # started here
       data = charity_data['users']
 
@@ -116,7 +127,7 @@ class BenefactorSerializer(serializers.ModelSerializer):
 
       benefactor =  BenefactorsStories.objects.create(charity=charities,**validated_data)
       
-      
+
       return benefactor
 
   def update(self,instance,validated_data):

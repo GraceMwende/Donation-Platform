@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory
 from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer
 from rest_framework import status
-from rest_framework.parsers import FileUploadParser
-from .forms import FileUploadForm
+# from rest_framework.parsers import FileUploadParser
+# from .forms import FileUploadForm
+# import json
+
 
 # Create your views here.
 def home(request):
@@ -178,12 +180,15 @@ class CharityDescription(APIView):
 
 # beneficiaries
 class BenefactorsList(APIView):
+
   def get(self, request, format=None):
-    all_benefactor = BenefactorsStories.objects.all()
+    all_benefactor = BenefactorsStory.objects.all()
     serializers = BenefactorSerializer(all_benefactor,many=True)
     return Response(serializers.data)
   
+
   def post(self, request):
+
     serializers = BenefactorSerializer(data=request.data)
     if serializers.is_valid():
       serializers.save()
@@ -194,8 +199,8 @@ class BenefactorsList(APIView):
 class BenefactorDescription(APIView):
   def get_benefactor(self, pk):
         try:
-            return BenefactorsStories.objects.get(pk=pk)
-        except BenefactorsStories.DoesNotExist:
+            return BenefactorsStory.objects.get(pk=pk)
+        except BenefactorsStory.DoesNotExist:
             return Http404
 
   def get(self, request, pk, format=None):
