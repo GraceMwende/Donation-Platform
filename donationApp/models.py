@@ -61,12 +61,15 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         return self.email
 
 class Charity(models.Model):
-    users = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
+    charity = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     location = models.CharField(max_length=150,default='Nairobi')
-    charity_image = CloudinaryField('image',blank=True,null=True)
+
+    # charity_image = models.ImageField(upload_to = 'charities/' , default='default.jpg',blank=True, null=True)
+    charity_image=CloudinaryField('image',blank=True,null=True)
+
 
     def __str__(self):
-        return self.users.user_name
+        return self.charity.user_name
 
     # def save(self):
     #     if not self.charity_image:
@@ -79,7 +82,7 @@ class Charity(models.Model):
     #     image = image.resize(size, Image.ANTIALIAS)
     #     image.save(self.charity_image.path)
 
-class BenefactorsStories(models.Model):
+class BenefactorsStory(models.Model):
     user_image = CloudinaryField('image',blank=True,null=True)
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=30)
