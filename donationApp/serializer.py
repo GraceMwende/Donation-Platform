@@ -87,10 +87,7 @@ class DonationsSerializer(serializers.ModelSerializer,):
       charity_donor =  Donations.objects.create(donor=donors,charity=charitys, **validated_data)
       return charity_donor
 
-# for user in users:
-          # charity = CustomUser.objects.get(pk=user.get('id'))
-          # instance.users.add(charity)
-        # CustomUser.objects.create(charity=charity,**users)
+
 
 class BenefactorSerializer(serializers.ModelSerializer):
   charity = CharitySerializer()
@@ -118,8 +115,7 @@ class BenefactorSerializer(serializers.ModelSerializer):
       charities = Charity.objects.create(users=new_user, location=location, charity_image=charity_image)
 
       benefactor =  BenefactorsStories.objects.create(charity=charities,**validated_data)
-      # charities = Charity.objects.create(**charity_data)
-      # benefactor =  BenefactorsStories.objects.create(charity=charities,**validated_data)
+      
       
       return benefactor
 
@@ -147,18 +143,5 @@ class BenefactorSerializer(serializers.ModelSerializer):
     users.email = data.get('email', users.email)
     users.save()
 
-
-    # charity = instance.charity
-    # instance.user_image = validated_data.get('user_image', instance.user_image)
-    # instance.title = validated_data.get('title', instance.title)
-    # instance.description = validated_data.get('description', instance.description)
-    # instance.save()
-
-    # charity.user_name = users_data.get('user_name',charity.user_name)
-
-    # charity.first_name = users_data.get('first_name',charity.first_name)
-    # charity.last_name = users_data.get('last_name',charity.last_name)
-    # charity.email = users_data.get('email',charity.email)
-    # charity.save()
 
     return instance
