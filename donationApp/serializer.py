@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Charity,Donor,Donations,CustomUser,BenefactorsStories
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory
 from django.contrib.auth.hashers import make_password
 
 
@@ -102,7 +102,7 @@ class BenefactorSerializer(serializers.ModelSerializer):
 
   class Meta:
 
-    model = BenefactorsStories
+    model = BenefactorsStory
 
     fields = '__all__'
 
@@ -125,7 +125,7 @@ class BenefactorSerializer(serializers.ModelSerializer):
 
       charities = Charity.objects.create(users=new_user, location=location, charity_image=charity_image)
 
-      benefactor =  BenefactorsStories.objects.create(charity=charities,**validated_data)
+      benefactor =  BenefactorsStory.objects.create(charity=charities,**validated_data)
       
 
       return benefactor
