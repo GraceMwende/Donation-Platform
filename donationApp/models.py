@@ -63,8 +63,10 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
 class Charity(models.Model):
     charity = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     location = models.CharField(max_length=150,default='Nairobi')
+
     # charity_image = models.ImageField(upload_to = 'charities/' , default='default.jpg',blank=True, null=True)
     charity_image=CloudinaryField('image',blank=True,null=True)
+
 
     def __str__(self):
         return self.charity.user_name
