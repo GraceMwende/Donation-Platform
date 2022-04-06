@@ -159,7 +159,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Add config
 cloudinary.config(
-    cloud_name='dwgefvv90',
+    cloud_name='gracemwende',
     api_key = '246898721865113',
     api_secret = 'lScpZR62nN6h1loGT0wlhRYMw5Y',
 )
