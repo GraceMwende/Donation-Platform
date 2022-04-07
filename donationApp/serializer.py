@@ -21,6 +21,8 @@ class UsersSerializer(serializers.ModelSerializer):
                 'is_charity': {'required': True},
                 'is_donor': {'required': True},
                 'is_admin': {'required': True},
+                'email':{'required': True},
+                'username':{'required': True},
         }   
 
 class BeneficiarySerializer(serializers.ModelSerializer):
