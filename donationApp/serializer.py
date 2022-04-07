@@ -15,16 +15,6 @@ class UsersSerializer(serializers.ModelSerializer):
     model = CustomUser
     exclude = ['is_staff','is_active','is_superuser','groups','user_permissions','last_login']
 
-    extra_kwargs = {
-                'password': {'write_only': True},
-                'user_name': {'required': True},
-                'is_charity': {'required': True},
-                'is_donor': {'required': True},
-                'is_admin': {'required': True},
-                'email':{'required': True},
-                'username':{'required': True},
-        }   
-
 class BeneficiarySerializer(serializers.ModelSerializer):
 
   class Meta:
