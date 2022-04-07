@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory
-from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory,Beneficiaries
+from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer,BeneficiarySerializer
 from rest_framework import status
 # from rest_framework.parsers import FileUploadParser
 # from .forms import FileUploadForm
@@ -192,8 +192,8 @@ class BenefactorsList(APIView):
     serializers = BenefactorSerializer(data=request.data)
     if serializers.is_valid():
       serializers.save()
-      return Response.json(serializers.data,status=status.HTTP_201_CREATED)
-    return Response.json(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+      return Response(serializers.data,status=status.HTTP_201_CREATED)
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 class BenefactorDescription(APIView):
@@ -220,4 +220,45 @@ class BenefactorDescription(APIView):
   def delete(self, request, pk, format=None):
     benefactor = self.get_benefactor(pk)
     benefactor.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BeneficiaryList(APIView):
+  def get(self, request, format=None):
+    all_beneficiaries = Beneficiaries.objects.all()
+    serializers = BeneficiarySerializer(all_beneficiaries,many=True)
+    return Response(serializers.data)
+
+  def post(self, request, format=None):
+    # request.data['user'] = user
+    serializers = BeneficiarySerializer(data=request.data)
+    if serializers.is_valid():
+      serializers.save()
+      return Response(serializers.data,status=status.HTTP_201_CREATED)
+    return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class BeneficiaryDescription(APIView):
+  def get_beneficiary(self, pk):
+    try:
+        return Beneficiaries.objects.get(pk=pk)
+    except Beneficiaries.DoesNotExist:
+        return Http404
+
+  def get(self, request, pk, format=None):
+    beneficiary = self.get_beneficiary(pk)
+    serializers = BeneficiarySerializer(beneficiary)
+    return Response(serializers.data)
+
+  def put(self, request, pk, format=None):
+    beneficiary = self.get_beneficiary(pk)
+    serializers = BeneficiarySerializer(beneficiary, request.data)
+    if serializers.is_valid():
+        serializers.save()
+        return Response(serializers.data)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  def delete(self, request, pk, format=None):
+    beneficiary = self.get_beneficiary(pk)
+    beneficiary.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

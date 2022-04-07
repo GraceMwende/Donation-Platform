@@ -91,6 +91,14 @@ class BenefactorsStory(models.Model):
     def __str__(self):
         return self.title
 
+class Beneficiaries(models.Model):
+    user_image = CloudinaryField('image',blank=True,null=True)
+    title = models.CharField(max_length=20)
+    description = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.title
+
     # def save(self):
     #     if not self.user_image:
     #         return            

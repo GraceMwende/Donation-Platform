@@ -10,9 +10,11 @@ urlpatterns = [
   path('api/donations/',views.DonationsList.as_view()),
   path('api/users/',views.UsersList.as_view()),
   path('api/benefactor_stories/',views.BenefactorsList.as_view()),
+  path('api/beneficiaries/',views.BeneficiaryList.as_view()),
   path('api/users/user-id/<int:pk>',views.UserDescription.as_view()),
   path('api/donors/donors-id/<int:pk>',views.DonorDescription.as_view()),
   path('api/donations/donations-id/<int:pk>',views.DonationsDescription.as_view()),
+  path('api/beneficiary/beneficiary-id/<int:pk>',views.BeneficiaryDescription.as_view()),
   path('api/charities/charities-id/<int:pk>',views.CharityDescription.as_view()),
   path('api/benefactor_stories/benefactor-id/<int:pk>',views.BenefactorDescription.as_view()),
 ]

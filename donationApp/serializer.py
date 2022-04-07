@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory
+from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory,Beneficiaries
 from django.contrib.auth.hashers import make_password
 
 
@@ -14,6 +14,12 @@ class UsersSerializer(serializers.ModelSerializer):
   class Meta:
     model = CustomUser
     exclude = ['is_staff','is_active','is_superuser','groups','user_permissions','last_login']
+
+class BeneficiarySerializer(serializers.ModelSerializer):
+
+  class Meta:
+    model = Beneficiaries
+    fields = '__all__'
 
 
 class DonorSerializer(serializers.ModelSerializer):
@@ -98,7 +104,7 @@ class DonationsSerializer(serializers.ModelSerializer,):
 
 
 class BenefactorSerializer(serializers.ModelSerializer):
-  # charity = CharitySerializer()
+  charity = CharitySerializer()
 
   class Meta:
 
