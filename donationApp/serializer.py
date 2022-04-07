@@ -98,7 +98,7 @@ class DonationsSerializer(serializers.ModelSerializer,):
 
 
 class BenefactorSerializer(serializers.ModelSerializer):
-  charity = CharitySerializer()
+  # charity = CharitySerializer()
 
   class Meta:
 
