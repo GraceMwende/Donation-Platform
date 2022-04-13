@@ -5,6 +5,12 @@ from rest_framework.views import APIView
 from .models import Charity,Donor,Donations,CustomUser,BenefactorsStory,Beneficiaries
 from .serializer import CharitySerializer,DonorSerializer,DonationsSerializer,UsersSerializer,BenefactorSerializer,BeneficiarySerializer
 from rest_framework import status
+
+from rest_framework.parsers import MultiPartParser, JSONParser
+
+import cloudinary.uploader
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 # from rest_framework.parsers import FileUploadParser
 # from .forms import FileUploadForm
 # import json
@@ -222,8 +228,12 @@ class BenefactorDescription(APIView):
     benefactor.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-
+# Beneficiary
 class BeneficiaryList(APIView):
+  # parser_classes = (
+  #       MultiPartParser,
+  #       JSONParser,
+  #   )
   def get(self, request, format=None):
     all_beneficiaries = Beneficiaries.objects.all()
     serializers = BeneficiarySerializer(all_beneficiaries,many=True)
@@ -236,6 +246,14 @@ class BeneficiaryList(APIView):
       serializers.save()
       return Response(serializers.data,status=status.HTTP_201_CREATED)
     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+  # def post(self, request, format=None):
+  #    file = request.data.get('picture')
+  #    upload_data = cloudinary.uploader.upload(file)
+  #    return Response({
+  #           'status': 'success',
+  #           'data': upload_data,
+  #       }, status=201)
 
 class BeneficiaryDescription(APIView):
   def get_beneficiary(self, pk):
@@ -262,3 +280,22 @@ class BeneficiaryDescription(APIView):
     beneficiary = self.get_beneficiary(pk)
     beneficiary.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CustomAuthToken(ObtainAuthToken):
+  def post(self, request, *args, **kwargs):
+    serializer = self.serializer_class(data=request.data,
+                                          context={'request': request})
+    serializer.is_valid(raise_exception=True)
+    user = serializer.validated_data['user']
+    token, created = Token.objects.get_or_create(user=user)
+    return Response({
+        'token': token.key,
+        'username': user.user_name,
+        'is_admin':user.is_admin,
+        'is_charity':user.is_charity,
+        'is_donor':user.is_donor,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'user_id': user.pk,
+        'email': user.email
+      })     

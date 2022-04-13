@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'cloudinary'
+    'cloudinary',
+    'rest_framework_simplejwt',
 ]
 
 REST_FRAMEWORK = {
@@ -173,4 +174,5 @@ cloudinary.config(
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'donationApp.CustomUser'
+WSGI_APPLICATION = 'automatedDonation.wsgi.application'
 django_heroku.settings(locals())

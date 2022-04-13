@@ -2,6 +2,8 @@ from django.urls import path,re_path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
   path('',views.home, name='donate-home'),
@@ -17,6 +19,10 @@ urlpatterns = [
   path('api/beneficiary/beneficiary-id/<int:pk>',views.BeneficiaryDescription.as_view()),
   path('api/charities/charities-id/<int:pk>',views.CharityDescription.as_view()),
   path('api/benefactor_stories/benefactor-id/<int:pk>',views.BenefactorDescription.as_view()),
+  path('api-token-auth/',obtain_auth_token),
+  path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+  path('api-auth', views.CustomAuthToken.as_view()),
+  # path('auth-users', views.AuthUsers.as_view())
 ]
 
 if settings.DEBUG:
